@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Memory Lab">
+  <meta name="description" content="Memory Lab 2.1 — дневная тренировка памяти минимум 5 минут с адаптивной сложностью и разными когнитивными блоками.">
+  <title>Memory Lab 2.1</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="violet">
+  <div class="backdrop-grid"></div>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <main class="app-shell" id="app">
+    <header class="topbar">
+      <button class="brand" id="homeBtn" type="button" aria-label="На главную">
+        <span class="brand-mark">M</span>
+        <span class="brand-copy"><b>MEMORY LAB</b><small>brain training · v2.1</small></span>
+      </button>
+      <div class="top-actions">
+        <button class="icon-btn hidden" id="installBtn" type="button" aria-label="Установить приложение">↓</button>
+        <button class="icon-btn" id="analyticsBtn" type="button" aria-label="Аналитика">▥</button>
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Звук">♪</button>
+        <button class="icon-btn" id="settingsBtn" type="button" aria-label="Настройки">⚙</button>
+      </div>
+    </header>
+
+    <section id="homeView" class="view active">
+      <section class="hero-grid">
+        <article class="hero-panel">
+          <div class="hero-topline">
+            <span class="eyebrow">СЕГОДНЯШНИЙ ЗАПУСК</span>
+            <span class="live-dot"><i></i><span id="todayStatus">готов к тренировке</span></span>
+          </div>
+          <h1>Память — это <span>навык.</span><br>Сделай ещё один подход.</h1>
+          <p id="heroDescription">Daily Protocol займёт минимум 5 минут и проведёт через несколько типов памяти с адаптивной сложностью.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-large" id="dailyBtn" type="button">Начать Daily · 6+ мин</button>
+            <button class="btn btn-secondary" id="quickBtn" type="button">Быстрый раунд</button>
+          </div>
+          <div class="hero-microstats">
+            <div><span>Сегодня фокус</span><strong id="todayRounds">0:00 / 6:00</strong></div>
+            <div><span>Серия</span><strong id="streakHero">0 дней</strong></div>
+            <div><span>Ранг</span><strong id="rankHero">Наблюдатель</strong></div>
+          </div>
+        </article>
+
+        <aside class="profile-panel">
+          <div class="profile-head">
+            <div><span class="eyebrow">ПРОФИЛЬ</span><h2 id="profileName">Игрок</h2></div>
+            <div class="level-orb"><small>LVL</small><strong id="levelNumber">1</strong></div>
+          </div>
+          <div class="xp-row"><span id="levelName">Наблюдатель</span><span id="xpText">0 / 250 XP</span></div>
+          <div class="xp-track"><i id="xpFill"></i></div>
+          <div class="brain-visual" aria-hidden="true">
+            <div class="brain-ring r1"></div><div class="brain-ring r2"></div><div class="brain-ring r3"></div>
+            <div class="brain-core">◉</div>
+            <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
+          </div>
+          <div class="profile-foot"><span>Всего XP</span><strong id="totalXp">0</strong></div>
+        </aside>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head">
+          <div><span class="eyebrow">СЦЕНАРИИ</span><h2>Выбери стиль тренировки</h2></div>
+          <button class="text-btn" id="customBtn" type="button">Свой микс ↗</button>
+        </div>
+        <div class="plan-grid" id="planGrid"></div>
+      </section>
+
+      <section class="mission-board">
+        <div class="section-head compact">
+          <div><span class="eyebrow">DAILY MISSIONS</span><h2>Задачи на сегодня</h2></div>
+          <span class="mission-bonus" id="missionBonus">+0 бонус XP</span>
+        </div>
+        <div class="mission-grid" id="missionGrid"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-head">
+          <div><span class="eyebrow">8 РЕЖИМОВ</span><h2>Тренируй отдельный навык</h2></div>
+          <button class="text-btn" id="randomGameBtn" type="button">Случайная игра ↗</button>
+        </div>
+        <div class="mode-grid" id="modeGrid"></div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel overview-panel">
+          <div class="panel-head"><div><span class="eyebrow">СВОДКА</span><h3>Твой прогресс</h3></div><button class="text-btn" id="openAnalyticsBtn" type="button">Подробнее</button></div>
+          <div class="stats-grid">
+            <div><span>Тренировок</span><strong id="sessionsStat">0</strong></div>
+            <div><span>Раундов</span><strong id="roundsStat">0</strong></div>
+            <div><span>Точность</span><strong id="accuracyStat">—</strong></div>
+            <div><span>Лучшая серия</span><strong id="bestStreakStat">0</strong></div>
+          </div>
+          <div class="week-strip" id="weekStrip"></div>
+        </article>
+
+        <article class="panel insight-panel">
+          <div class="panel-head"><div><span class="eyebrow">INSIGHT</span><h3>Что тренировать дальше</h3></div><span class="insight-icon">✦</span></div>
+          <p id="insightText">Сыграй несколько раундов — приложение найдёт твой самый слабый режим.</p>
+          <button class="btn btn-secondary btn-full" id="weakSpotBtn" type="button">Тренировать слабое место</button>
+        </article>
+      </section>
+
+      <section class="achievement-panel panel">
+        <div class="panel-head"><div><span class="eyebrow">ДОСТИЖЕНИЯ</span><h3>Коллекция</h3></div><span id="achievementCount">0 / 12</span></div>
+        <div class="achievement-list" id="achievementList"></div>
+      </section>
+
+      <section class="tip-card">
+        <div class="tip-symbol">✦</div>
+        <div><span class="eyebrow">MEMORY NOTE</span><p id="memoryTip"></p></div>
+      </section>
+    </section>
+
+    <section id="gameView" class="view">
+      <div class="game-topline">
+        <button class="back-btn" id="exitGameBtn" type="button">← Выйти</button>
+        <div class="game-progress-wrap">
+          <div class="game-progress-meta"><span id="roundLabel">Раунд 1 / 5</span><span id="sessionPlanName">Daily Mix</span></div>
+          <div class="game-progress"><i id="gameProgressFill"></i></div>
+        </div>
+        <div class="top-chips"><span class="session-clock-chip training" id="sessionClockChip">ещё 6:00</span><span class="combo-chip" id="comboChip">COMBO ×1.0</span><span class="score-chip" id="scoreChip">0 XP</span></div>
+      </div>
+
+      <article class="game-stage">
+        <div class="game-head">
+          <div><span class="eyebrow" id="gameType">FLASH NUMBERS</span><h2 id="gameTitle">Запомни последовательность</h2></div>
+          <div class="difficulty-pill" id="difficultyPill">Уровень 1</div>
+        </div>
+        <div class="instruction" id="instructionText">Смотри внимательно. После показа воспроизведи то, что запомнил.</div>
+        <div class="pressure hidden" id="pressureBox"><span>Время на ответ</span><strong id="pressureTime">20</strong><i id="pressureFill"></i></div>
+        <div class="countdown hidden" id="countdown"></div>
+        <div class="game-area" id="gameArea"></div>
+        <div class="feedback hidden" id="feedbackBox"></div>
+        <div class="game-actions" id="gameActions"></div>
+      </article>
+    </section>
+
+    <section id="summaryView" class="view">
+      <article class="summary-card">
+        <div class="summary-top">
+          <div class="summary-ring" id="summaryRing"><span id="summaryScore">0%</span></div>
+          <div><span class="eyebrow">СЕССИЯ ЗАВЕРШЕНА</span><h2 id="summaryTitle">Хорошая тренировка</h2><p id="summaryText">Ты закончил тренировку.</p></div>
+        </div>
+        <div class="summary-stats">
+          <div><span>XP</span><strong id="summaryXp">+0</strong></div>
+          <div><span>Точность</span><strong id="summaryAccuracy">0%</strong></div>
+          <div><span>Комбо</span><strong id="summaryCombo">×1.0</strong></div>
+          <div><span>Время</span><strong id="summaryDuration">0:00</strong></div>
+        </div>
+        <div class="round-report" id="roundReport"></div>
+        <div class="summary-actions">
+          <button class="btn btn-primary" id="summaryAgainBtn" type="button">Повторить сценарий</button>
+          <button class="btn btn-secondary" id="summaryHomeBtn" type="button">На главную</button>
+        </div>
+      </article>
+    </section>
+
+    <section id="analyticsView" class="view">
+      <div class="analytics-head">
+        <button class="back-btn" id="analyticsBackBtn" type="button">← Назад</button>
+        <div><span class="eyebrow">АНАЛИТИКА</span><h1>Как меняется твоя память</h1></div>
+      </div>
+      <div class="analytics-grid">
+        <article class="panel"><div class="panel-head"><div><span class="eyebrow">ПО РЕЖИМАМ</span><h3>Средняя точность</h3></div></div><div class="mastery-list" id="masteryList"></div></article>
+        <article class="panel"><div class="panel-head"><div><span class="eyebrow">ПОСЛЕДНИЕ СЕССИИ</span><h3>История</h3></div></div><div class="history-list" id="historyList"></div></article>
+      </div>
+      <article class="panel analytics-summary"><div class="panel-head"><div><span class="eyebrow">ПАТТЕРН</span><h3>Автоматический вывод</h3></div></div><p id="analyticsInsight">Недостаточно данных.</p></article>
+    </section>
+
+    <footer>Memory Lab 2.1 · Daily Protocol ≥ 5 мин · локальные данные · офлайн</footer>
+  </main>
+
+  <div class="modal-backdrop hidden" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-card settings-modal-card">
+      <div class="modal-head"><div><span class="eyebrow">НАСТРОЙКИ</span><h2 id="settingsTitle">Настрой Memory Lab под себя</h2></div><button class="icon-btn" id="closeSettings" type="button">×</button></div>
+      <div class="settings-sections">
+        <section class="settings-section">
+          <h3>Профиль и тренировка</h3>
+          <label class="setting-row"><span><b>Имя профиля</b><small>Отображается только на этом устройстве</small></span><input id="profileNameInput" type="text" maxlength="18" placeholder="Игрок"></label>
+          <label class="setting-row"><span><b>Минимум времени Daily</b><small>Активная практика; не меньше 5 минут</small></span><input id="dailyMinutes" type="number" min="5" max="20" step="1"></label>
+          <label class="setting-row"><span><b>Базовых раундов Daily</b><small>9–16; включает 4 блока + слабое место, а при нехватке времени добавятся адаптивные раунды</small></span><input id="dailyRounds" type="number" min="9" max="16" step="1"></label>
+          <label class="setting-row"><span><b>Базовая сложность</b><small>Уровень старта каждой сессии</small></span><select id="baseDifficulty"><option value="1">1 · легко</option><option value="2">2</option><option value="3">3 · средне</option><option value="4">4</option><option value="5">5</option><option value="6">6 · сложно</option></select></label>
+          <label class="setting-row"><span><b>Темп показа</b><small>Сколько времени элементы остаются на экране</small></span><select id="paceSelect"><option value="1.25">Спокойный</option><option value="1">Обычный</option><option value="0.78">Быстрый</option><option value="0.6">Turbo</option></select></label>
+          <label class="setting-row"><span><b>Отсчёт перед раундом</b><small>0–3 секунды</small></span><select id="countdownSelect"><option value="0">Без отсчёта</option><option value="1">1 секунда</option><option value="2">2 секунды</option><option value="3">3 секунды</option></select></label>
+          <label class="toggle-row"><span><b>Адаптивная сложность</b><small>Повышать или снижать уровень по результату</small></span><input id="adaptiveToggle" type="checkbox"><i></i></label>
+          <label class="toggle-row"><span><b>Режим давления</b><small>Ограничить время на ответ</small></span><input id="pressureToggle" type="checkbox"><i></i></label>
+          <label class="setting-row"><span><b>Время на ответ</b><small>Работает в режиме давления</small></span><input id="pressureSeconds" type="number" min="5" max="90" step="5"></label>
+          <label class="toggle-row"><span><b>Разбор ошибки</b><small>Показывать правильный ответ после раунда</small></span><input id="reviewToggle" type="checkbox"><i></i></label>
+        </section>
+
+        <section class="settings-section">
+          <h3>Режимы в миксах</h3>
+          <p class="settings-note">Отключённые игры не попадут в Daily Mix, Sprint, Marathon и Custom Mix.</p>
+          <div class="mode-toggle-grid" id="modeToggleGrid"></div>
+        </section>
+
+        <section class="settings-section">
+          <h3>Оформление и устройство</h3>
+          <label class="setting-row"><span><b>Цветовая тема</b><small>Меняет акценты приложения</small></span><select id="themeSelect"><option value="violet">Violet Pulse</option><option value="ocean">Ocean Signal</option><option value="amber">Amber Core</option></select></label>
+          <label class="toggle-row"><span><b>Анимации</b><small>Плавные переходы и визуальные эффекты</small></span><input id="animationsToggle" type="checkbox"><i></i></label>
+          <label class="toggle-row"><span><b>Звуковые сигналы</b><small>Фидбек и отсчёт</small></span><input id="soundToggle" type="checkbox"><i></i></label>
+          <label class="toggle-row"><span><b>Вибрация</b><small>Если устройство поддерживает</small></span><input id="vibrationToggle" type="checkbox"><i></i></label>
+          <label class="toggle-row"><span><b>Не гасить экран</b><small>Во время тренировки</small></span><input id="wakeToggle" type="checkbox"><i></i></label>
+        </section>
+
+        <section class="settings-section danger-zone">
+          <h3>Данные</h3>
+          <div class="data-actions">
+            <button class="btn btn-secondary" id="exportBtn" type="button">Экспорт прогресса</button>
+            <label class="btn btn-secondary file-btn">Импорт прогресса<input id="importInput" type="file" accept="application/json"></label>
+            <button class="btn btn-danger" id="resetAllBtn" type="button">Сбросить весь прогресс</button>
+          </div>
+        </section>
+      </div>
+      <div class="modal-actions"><button class="btn btn-secondary" id="defaultsBtn" type="button">Настройки по умолчанию</button><button class="btn btn-primary" id="saveSettingsBtn" type="button">Сохранить</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="customModal" role="dialog" aria-modal="true" aria-labelledby="customTitle">
+    <div class="modal-card small-modal">
+      <div class="modal-head"><div><span class="eyebrow">CUSTOM MIX</span><h2 id="customTitle">Собери свою тренировку</h2></div><button class="icon-btn" id="closeCustom" type="button">×</button></div>
+      <label class="setting-row"><span><b>Количество раундов</b><small>3–15</small></span><input id="customRounds" type="number" min="3" max="15" step="1" value="6"></label>
+      <div class="mode-toggle-grid" id="customModeGrid"></div>
+      <div class="modal-actions"><button class="btn btn-primary btn-full" id="startCustomBtn" type="button">Начать Custom Mix</button></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
