@@ -35,7 +35,7 @@ const GAME_MODES = [
   {id:'sequence', icon:'✦', name:'Order Chain', desc:'Запомни порядок символов и нажми их в той же последовательности.', badge:'Порядок', accent:'#ffc85a'},
   {id:'trail', icon:'↗', name:'Spatial Trail', desc:'Клетки вспыхивают по очереди. Повтори маршрут без подсказок.', badge:'Пространство', accent:'#8ee26b'},
   {id:'missing', icon:'?', name:'Missing One', desc:'Запомни набор объектов и найди тот, который исчез.', badge:'Наблюдение', accent:'#ff8a5b'},
-  {id:'pairs', icon:'⌘', name:'Pair Match', desc:'Классическая память: открой все пары с минимальным числом ходов.', badge:'Карточки', accent:'#e18cff'}
+  {id:'pairs', icon:'🃏', name:'Pair Match', desc:'Классическая память: открой все пары с минимальным числом ходов.', badge:'Карточки', accent:'#e18cff'}
 ];
 
 const ACHIEVEMENTS = [

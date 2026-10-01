@@ -311,7 +311,57 @@
   }
 
   function gamePairs(d){
-    const pairs=clamp(3+d,4,8),vals=sample(EMOJIS,pairs),deck=shuffle([...vals,...vals]);$('instructionText').textContent='Открой все пары. Чем меньше ходов — тем выше результат.';const g=document.createElement('div');g.className='pairs-grid';let open=[],matched=0,moves=0,lock=false;deck.forEach((v,i)=>{const b=document.createElement('button');b.className='pair-card';b.textContent=v;b.addEventListener('click',()=>{if(roundResolved||lock||b.classList.contains('matched')||open.includes(i))return;b.classList.add('revealed');open.push(i);if(open.length===2){moves++;const[a,c]=open;if(deck[a]===deck[c]){g.children[a].classList.add('matched');g.children[c].classList.add('matched');open=[];matched++;if(matched===pairs){const ideal=pairs,score=clamp(100-(moves-ideal)*8,35,100);result(score,'Все пары найдены',`${moves} ходов. Идеальный минимум: ${ideal}.`);}}else{lock=true;const t=setTimeout(()=>{g.children[a].classList.remove('revealed');g.children[c].classList.remove('revealed');open=[];lock=false;},650);registerCleanup(()=>clearTimeout(t));}}});g.appendChild(b);});$('gameArea').innerHTML='';$('gameArea').appendChild(g);startPressureTimer(()=>timeoutResult('Время на поиск пар закончилось.'),2);
+    const pairs=clamp(3+d,4,8),vals=sample(EMOJIS,pairs),deck=shuffle([...vals,...vals]);
+    $('instructionText').textContent='Открой все пары. Чем меньше ходов — тем выше результат.';
+    const g=document.createElement('div');
+    g.className='pairs-grid';
+    let open=[],matched=0,moves=0,lock=false;
+    deck.forEach((v,i)=>{
+      const b=document.createElement('button');
+      b.className='pair-card';
+      b.type='button';
+      b.setAttribute('aria-label','Закрытая карточка');
+      const symbol=document.createElement('span');
+      symbol.className='pair-symbol';
+      symbol.textContent=v;
+      symbol.setAttribute('aria-hidden','true');
+      b.appendChild(symbol);
+      b.addEventListener('click',()=>{
+        if(roundResolved||lock||b.classList.contains('matched')||open.includes(i))return;
+        b.classList.add('revealed');
+        b.setAttribute('aria-label',`Открытая карточка ${v}`);
+        open.push(i);
+        if(open.length===2){
+          moves++;
+          const[a,c]=open;
+          if(deck[a]===deck[c]){
+            g.children[a].classList.add('matched');
+            g.children[c].classList.add('matched');
+            g.children[a].setAttribute('aria-label',`Найденная пара ${deck[a]}`);
+            g.children[c].setAttribute('aria-label',`Найденная пара ${deck[c]}`);
+            open=[];matched++;
+            if(matched===pairs){
+              const ideal=pairs,score=clamp(100-(moves-ideal)*8,35,100);
+              result(score,'Все пары найдены',`${moves} ходов. Идеальный минимум: ${ideal}.`);
+            }
+          }else{
+            lock=true;
+            const t=setTimeout(()=>{
+              g.children[a].classList.remove('revealed');
+              g.children[c].classList.remove('revealed');
+              g.children[a].setAttribute('aria-label','Закрытая карточка');
+              g.children[c].setAttribute('aria-label','Закрытая карточка');
+              open=[];lock=false;
+            },650);
+            registerCleanup(()=>clearTimeout(t));
+          }
+        }
+      });
+      g.appendChild(b);
+    });
+    $('gameArea').innerHTML='';
+    $('gameArea').appendChild(g);
+    startPressureTimer(()=>timeoutResult('Время на поиск пар закончилось.'),2);
   }
 
   function finishSession(){
